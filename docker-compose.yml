@@ -1,0 +1,9 @@
+version: '3.8'
+services:
+  keycloak:
+    build: ./keycloak
+    container_name: keycloak-app
+    ports:
+      - "8080:8080"
+    tty: true
+    stdin_open: true
