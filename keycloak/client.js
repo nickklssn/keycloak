@@ -8,7 +8,7 @@ async function createClient() {
     client_id: process.env.CLIENT_ID,
     client_secret: process.env.CLIENT_SECRET,
     redirect_uris: [process.env.REDIRECT_URI],
-    response_types: [process.env.RESPONSE_TYPE],
+    response_types: [process.env.RESPONSE_TYPES],
     id_token_signing_alg_values_supported:
       process.env.ID_TOKEN_SIGNING_ALG_VALUES_SUPPORTED,
   });
