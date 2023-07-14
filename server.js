@@ -5,6 +5,8 @@ const cookieParser = require("cookie-parser");
 const {
   getAuthUrl,
   getCallbackParams,
+  generateTokenset,
+  generateCodeVerifier
 } = require("./keycloak/client.js");
 
 const app = express();
@@ -26,7 +28,10 @@ app.get("/login", async (req, res) => {
 });
 
 app.get("/login/cb", async (req, res) => {
-  console.log(await getCallbackParams(req))
+  const params = await getCallbackParams(req)
+  const code_verifier = generateCodeVerifier()
+  const tokenSet = await generateTokenset("http://localhost:3000/login/cb", params)
+  console.log(tokenSet)
   res.send("Successfully authenticated!")
 });
 
