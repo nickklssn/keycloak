@@ -2,12 +2,8 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const {
-  getAuthUrl,
-  getCallbackParams,
-  generateTokenset,
-  generateCodeVerifier
-} = require("./keycloak/client.js");
+const login = require("./controller/loginController.js");
+const callback = require("./controller/callbackController.js");
 
 const app = express();
 
@@ -22,17 +18,13 @@ app.get("/", (_req, res) => {
   res.sendFile(__dirname + "/views/index.html");
 });
 
-app.get("/login", async (req, res) => {
-  res.redirect(await getAuthUrl())
+app.get("/login", login ,async (req, res) => {
+
 
 });
 
-app.get("/login/cb", async (req, res) => {
-  const params = await getCallbackParams(req)
-  const code_verifier = generateCodeVerifier()
-  const tokenSet = await generateTokenset("http://localhost:3000/login/cb", params)
-  console.log(tokenSet)
-  res.send("Successfully authenticated!")
+app.get("/login/cb", callback ,async (req, res) => {
+
 });
 
 app.listen(PORT, () => {
