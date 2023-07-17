@@ -20,8 +20,13 @@ async function getCallbackParams(request) {
   return (await createClient()).client.callbackParams(request);
 }
 
-async function getAuthUrl() {
-  return (await createClient()).client.authorizationUrl();
+async function getAuthUrl(code_challenge) {
+  return (await createClient()).client.authorizationUrl({
+    scope: "openid email profile",
+    code_challenge,
+    code_challenge_method: "S256"
+
+  });
 }
 
 function generateCodeVerifier() {
@@ -32,8 +37,7 @@ function generateCodeChallenge(codeVerifier) {
   return generators.codeChallenge(codeVerifier);
 }
 
-async function generateTokenset(callbackUri, params) {
-  const codeVerifier = generateCodeVerifier();
+async function generateTokenset(callbackUri, params, codeVerifier) {
   const {client} = await createClient()
   const tokenSet = await client.callback(callbackUri, params, {codeVerifier})
   return tokenSet
