@@ -35,7 +35,7 @@ async function generateTokenset(callbackUri, params) {
 
 async function validateToken(accessToken){
   const {client} = await createClient()
-  const response = client.userinfo(accessToken)
+  const response = await client.userinfo(accessToken)
   console.log(response)
 }
 

@@ -5,6 +5,7 @@ const verifyToken = async (req, res, next) => {
         const access_token = req.cookies.tokenset.access_token
         console.log(access_token)
         await validateToken(access_token)
+        next()
 
 
         
@@ -14,7 +15,7 @@ const verifyToken = async (req, res, next) => {
 
 catch(err){
     console.error(err)
-    res.send("Session expired, login again!")
+    res.send(err.message)
 }
 }
 
