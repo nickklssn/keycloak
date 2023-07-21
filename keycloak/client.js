@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { Issuer } = require("openid-client");
+const { Issuer, TokenSet } = require("openid-client");
 
 async function createClient() {
   const keycloakIssuer = await Issuer.discover("http://localhost:8080/realms/myrealm");
@@ -33,15 +33,22 @@ async function generateTokenset(callbackUri, params) {
   return tokenSet
 }
 
-async function validateToken(accessToken){
+async function isValid(tokenset){
+  const newTokenset = new TokenSet(tokenset)
+  if(newTokenset.expired()) return false
+  else return true
+}
+
+async function regenerateToken(refreshToken){
   const {client} = await createClient()
-  const response = await client.userinfo(accessToken)
-  console.log(response)
+  const newTokenset = client.refresh(refreshToken)
+  return newTokenset
 }
 
 module.exports = {
   getAuthUrl,
   getCallbackParams,
   generateTokenset,
-  validateToken
+  isValid,
+  regenerateToken
 };
