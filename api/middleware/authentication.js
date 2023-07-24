@@ -6,7 +6,7 @@ const authentication = async (req, res, err, next) =>{
     try{
     if(err){
         console.log("mfkfnmjkfnefkjnefjkenbf")
-        res.redirect(await getAuthUrl());
+        res.redirect(getAuthUrl());
     }
 }
 catch(err){

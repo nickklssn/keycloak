@@ -4,7 +4,7 @@ const {
 
 const login = async (_req, res, next) => {
   try {
-    res.redirect(await getAuthUrl());
+    res.redirect(getAuthUrl());
     next();
   } catch (err) {
     console.error(err.message);
