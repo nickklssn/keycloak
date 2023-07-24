@@ -1,10 +1,12 @@
 require("dotenv").config();
-const { Issuer, generators } = require("openid-client");
+const { Issuer, TokenSet, generators } = require("openid-client");
 
-async function createClient() {
+var client = null;
+
+(async function() {
   const keycloakIssuer = await Issuer.discover(process.env.KC_ISSUER);
 
-  const client = new keycloakIssuer.Client({
+  client = new keycloakIssuer.Client({
     client_id: process.env.CLIENT_ID,
     client_secret: process.env.CLIENT_SECRET,
     redirect_uris: [process.env.REDIRECT_URI],
@@ -13,20 +15,33 @@ async function createClient() {
       process.env.ID_TOKEN_SIGNING_ALG_VALUES_SUPPORTED,
   });
 
-  return { client };
+})();
+
+function getCallbackParams(request) {
+  return client.callbackParams(request);
 }
 
-async function getCallbackParams(request) {
-  return (await createClient()).client.callbackParams(request);
-}
-
-async function getAuthUrl(code_challenge) {
-  return (await createClient()).client.authorizationUrl({
+function getAuthUrl() {
+  return client.authorizationUrl({
     scope: "openid email profile",
-    code_challenge,
-    code_challenge_method: "S256"
-
   });
+}
+
+
+async function generateTokenset(callbackUri, params) {
+  const tokenSet = await client.callback(callbackUri, params)
+  return tokenSet
+}
+
+function isValid(tokenset){
+  const newTokenset = new TokenSet(tokenset)
+  if(newTokenset.expired()) return false
+  else return true
+}
+
+function regenerateToken(refreshToken){
+  const newTokenset = client.refresh(refreshToken)
+  return newTokenset
 }
 
 function generateCodeVerifier() {
@@ -37,16 +52,12 @@ function generateCodeChallenge(codeVerifier) {
   return generators.codeChallenge(codeVerifier);
 }
 
-async function generateTokenset(callbackUri, params, codeVerifier) {
-  const {client} = await createClient()
-  const tokenSet = await client.callback(callbackUri, params, {codeVerifier})
-  return tokenSet
-}
-
 module.exports = {
-  generateCodeChallenge,
-  generateCodeVerifier,
   getAuthUrl,
   getCallbackParams,
   generateTokenset,
+  isValid,
+  regenerateToken,
+  generateCodeVerifier,
+  generateCodeChallenge
 };
