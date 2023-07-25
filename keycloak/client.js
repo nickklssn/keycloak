@@ -1,18 +1,18 @@
 require("dotenv").config();
 const { Issuer, TokenSet, generators } = require("openid-client");
 
+
 var client = null;
 
 (async function() {
-  const keycloakIssuer = await Issuer.discover(process.env.KC_ISSUER);
+  const keycloakIssuer = await Issuer.discover("http://localhost:8080/realms/myrealm");
 
   client = new keycloakIssuer.Client({
-    client_id: process.env.CLIENT_ID,
-    client_secret: process.env.CLIENT_SECRET,
-    redirect_uris: [process.env.REDIRECT_URI],
-    response_types: [process.env.RESPONSE_TYPES],
-    id_token_signing_alg_values_supported:
-      process.env.ID_TOKEN_SIGNING_ALG_VALUES_SUPPORTED,
+    client_id: "myclient",
+    client_secret: "xD0VuRQnZnGu0eDyGXEjn8yx52IbdO0A",
+    redirect_uris: ["http://localhost:3000/login/cb"],
+    response_types: ["code"],
+    id_token_signing_alg_values_supported: "RS256",
   });
 
 })();
@@ -21,15 +21,18 @@ function getCallbackParams(request) {
   return client.callbackParams(request);
 }
 
-function getAuthUrl() {
+function getAuthUrl(code_challenge) {
   return client.authorizationUrl({
     scope: "openid email profile",
+    resource: "http://localhost:3001/data",
+    code_challenge,
+    code_challenge_method: "S256"
   });
 }
 
 
 async function generateTokenset(callbackUri, params) {
-  const tokenSet = await client.callback(callbackUri, params)
+  const tokenSet = await client.oauthCallback(callbackUri, params)
   return tokenSet
 }
 
@@ -52,6 +55,8 @@ function generateCodeChallenge(codeVerifier) {
   return generators.codeChallenge(codeVerifier);
 }
 
+
+
 module.exports = {
   getAuthUrl,
   getCallbackParams,
@@ -59,5 +64,5 @@ module.exports = {
   isValid,
   regenerateToken,
   generateCodeVerifier,
-  generateCodeChallenge
+  generateCodeChallenge,
 };
