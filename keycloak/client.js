@@ -31,8 +31,8 @@ function getAuthUrl(code_challenge) {
 }
 
 
-async function generateTokenset(callbackUri, params) {
-  const tokenSet = await client.oauthCallback(callbackUri, params)
+async function generateTokenset(callbackUri, params, code_verifier) {
+  const tokenSet = await client.callback(callbackUri, params, code_verifier)
   return tokenSet
 }
 
