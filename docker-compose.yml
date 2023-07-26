@@ -7,3 +7,10 @@ services:
       - "8080:8080"
     tty: true
     stdin_open: true
+  db:
+    build: ./database
+    container_name: db
+    ports:
+      - "5432:5432"
+    tty: true
+    stdin_open: true
