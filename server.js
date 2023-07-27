@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const login = require("./controller/loginController.js");
 const callback = require("./controller/callbackController.js");
-const { queryDb } = require("./database/db.js");
 
 const app = express();
 
@@ -29,8 +28,6 @@ app.get("/login/cb", callback ,async (req, res) => {
 });
 
 app.get("/test",  async(req, res) =>{
-  const response = await queryDb()
-  console.log(response)
 })
 
 app.listen(PORT, () => {
