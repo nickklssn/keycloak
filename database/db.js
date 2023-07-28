@@ -15,18 +15,9 @@ async function queryData(){
     console.log("Das hier sollte das Resultat sein", result)
 }
 
-async function createDb(){
-    const client = await pool.connect()
-    await client.query(`DROP DATABASE IF EXISTS token;`)
-    await client.query(`CREATE DATABASE token;`)
-
-    client.release()
-}
-
 async function createTable(){
     const client = await pool.connect()
-        await client.query(`DROP TABLE token;`)
-        await client.query(`CREATE TABLE token (
+        await client.query(`CREATE TABLE IF NOT EXISTS token (
         "preferred_username" VARCHAR(100),
         "name" VARCHAR(100),
         "session_state" VARCHAR(100),
@@ -38,7 +29,6 @@ async function createTable(){
 }
 
 async function insertData(data){
-    await createDb()
     await createTable()
     const client = await pool.connect()
     await client.query(`INSERT INTO token
@@ -49,6 +39,12 @@ async function insertData(data){
         '${data.access_token}',
         '${data.refresh_token}'
     );`)
+    client.release()
+}
+
+async function deleteData(){
+    const client = await pool.connect()
+    await client.query(`DROP TABLE token`)
     client.release()
 }
 
@@ -64,5 +60,6 @@ async function updateData(data){
 
 module.exports = {
     queryData,
-    insertData
+    insertData,
+    deleteData
 }
