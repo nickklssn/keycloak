@@ -48,9 +48,43 @@ async function deleteData(){
     client.release()
 }
 
-async function updateData(data){
-    //This function should update the access inside the cookie via
-    //refresh token rotation
+async function getRefreshtoken(data) {
+    const client = await pool.connect();
+    try {
+        const result = await client.query(
+            `SELECT refresh_token FROM token
+            WHERE access_token = $1;`,
+            [data]
+        );
+
+        // Überprüfen, ob Zeilen vorhanden sind
+        if (result.rows.length > 0) {
+            const refresh_token = result.rows[0].refresh_token;
+            console.log(refresh_token);
+            return refresh_token;
+        } else {
+            console.log("Kein Refresh-Token gefunden.");
+            return null; // Oder wir können einen speziellen Wert zurückgeben, um anzuzeigen, dass kein Token gefunden wurde.
+        }
+    } catch (error) {
+        console.error("Fehler beim Abrufen des Refresh-Tokens:", error);
+        return null; // Oder wir können einen speziellen Wert zurückgeben, um den Fehler zu kennzeichnen.
+    } finally {
+        client.release();
+    }
+}
+
+async function updateToken(oldAccessToken, newAccessToken, newRefreshToken) {
+    const client = await pool.connect();
+    await client.query(
+        `UPDATE token
+        SET access_token = $1,
+            refresh_token = $2
+        WHERE access_token = $3;
+        `,
+        [newAccessToken, newRefreshToken, oldAccessToken]
+    );
+    client.release();
 }
 
 
@@ -61,5 +95,7 @@ async function updateData(data){
 module.exports = {
     queryData,
     insertData,
-    deleteData
+    deleteData,
+    getRefreshtoken,
+    updateToken
 }
