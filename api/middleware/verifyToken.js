@@ -1,16 +1,25 @@
-const { isValid, regenerateToken } = require("../../keycloak/client.js");
+const { regenerateToken, isActive,  } = require("../../keycloak/client.js");
+const {getRefreshtoken, updateToken} = require("../../database/db.js")
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
   try {
-    const token = req.cookies.tokenset;
+    const token = req.cookies.tokenset; //Das ist nur access token
     //console.log("Das ist das Tokenset aus dem Cookie", token)
-    if (isValid(token)) {
+    if (await isActive(token) == true) {
+      console.log(await isActive(token))
       console.log("Ist valide"); // Token ist gültig
-      next();
-    } else {
+      next()
+    } 
+    else {
       console.log("Ist nicht valide"); //Token ist nicht gültig und wird refresht
-      const newToken = regenerateToken(token.refresh_token);
-      res.cookie("tokenset", newToken, { httpOnly: true });
+      const refreshToken = await getRefreshtoken(token) //nur refresh token aus db
+      const newTokenset = await regenerateToken(refreshToken); //nur access token
+      const newAccessToken = newTokenset.access_token
+      const newRefreshToken = newTokenset.refresh_token
+      console.log(newAccessToken, newRefreshToken)
+      await updateToken(token, newAccessToken, newRefreshToken)
+      res.cookie("tokenset", newAccessToken, { httpOnly: true });
+      console.log("Updated token!")
       next();
     }
   } catch (err) {
@@ -19,4 +28,5 @@ const verifyToken = (req, res, next) => {
   }
 };
 
+// Wenn der Refresh Token inaktiv ist, dann am besten ein redirect zur kc anmeldeseite
 module.exports = verifyToken;
