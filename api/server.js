@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const verifyToken = require("./middleware/verifyToken");
+const verifyRole = require("./middleware/verifyRoles");
 
 const app = express();
 
@@ -13,7 +14,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(verifyToken)
 
-app.get("/", (req, res) => {
+app.get("/", verifyRole("app-user") ,(req, res) => {
   res.send("Welcome to the api");
 });
 
