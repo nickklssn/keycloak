@@ -1,12 +1,12 @@
 const { insertData, queryData } = require("../database/db.js")
 const {getCallbackParams, generateTokenset} = require("../keycloak/client.js")
+const store = require("store")
 
 const callback = async (req, res, next) =>{
     try{
-        const code_verifier = req.cookies.code_verifier
-        //console.log(code_verifier)
+        const code_verifier = store.get("code_verifier")
         const params = await getCallbackParams(req)
-        const tokenSet = await generateTokenset("http://localhost:3000/login/cb", params, {code_verifier})
+        const tokenSet = await generateTokenset("http://localhost:3000/login/cb", params, code_verifier)
         //console.log(params, tokenSet)
         await insertData(tokenSet)
         await queryData()
