@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const verifyToken = require("./middleware/verifyToken");
 const verifyRole = require("./middleware/verifyRoles");
+const errorHandler = require("./middleware/errorhandler");
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(verifyToken)
+app.use(errorHandler)
 
 app.get("/", verifyRole("app-user") ,(req, res) => {
   res.send("Welcome to the api");
