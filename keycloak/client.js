@@ -64,7 +64,7 @@ async function getUserRoles(accessToken){
   const isActive = await client.introspect(accessToken)
 
   if(isActive.active == false){
-    return null
+    return []
   }
   else{
     return isActive.realm_access.roles
