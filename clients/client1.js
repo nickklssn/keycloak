@@ -1,8 +1,15 @@
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const { Issuer, generators } = require("openid-client");
 const { insertData, queryData } = require("../database/db");
+
+const { initializeClient1, generateCodeVerifier, generateCodeChallenge } = require("../keycloak/client.js");
+
+
+
+
+(async function(){
 
 const app = express();
 
@@ -10,28 +17,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-
-
-var client = null;
-
-(async function () {
-  const keycloakIssuer = await Issuer.discover(
-    "http://localhost:8080/realms/myrealm"
-  );
-
-  client = new keycloakIssuer.Client({
-    client_id: "myclient",
-    client_secret: "xD0VuRQnZnGu0eDyGXEjn8yx52IbdO0A",
-    redirect_uris: ["http://localhost:4000/login/cb"],
-    response_types: ["code"],
-    id_token_signing_alg_values_supported: "RS256",
-  });
-})();
-
+const client = await initializeClient1()
 
 app.get("/login", (req, res) => {
-    const code_verifier = generators.codeVerifier();
-    const code_challenge = generators.codeChallenge(code_verifier)
+    const code_verifier = generateCodeVerifier()
+    const code_challenge = generateCodeChallenge(code_verifier)
     const authUrl = client.authorizationUrl({
         scope: "openid email profile",
         code_challenge,
@@ -56,9 +46,15 @@ app.get("/login/cb", async (req, res) =>{
     res.redirect("http://localhost:3001")
 })
 
+app.get("/test", (req, res) =>{
+  console.log(client)
+})
+
 
 
 
 app.listen(4000, () => {
   console.log("Server listen on port 4000");
 });
+
+})()
