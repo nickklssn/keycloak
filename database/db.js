@@ -44,8 +44,9 @@ async function insertData(data){
 
 async function deleteData(){
     const client = await pool.connect()
-    await client.query(`DROP TABLE token`)
+    await client.query(`DELETE FROM token`)
     client.release()
+    console.log("Deleted data!")
 }
 
 async function getRefreshtoken(data) {
