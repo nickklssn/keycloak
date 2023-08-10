@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Dashboard</title>
+<style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+    #dashboard {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+    <div id="dashboard">
+        <h1>API Dashboard</h1>
+        <form id="fetchDataForm">
+          <button type="button" id="fetchDataBtn">Daten abrufen</button>
+        </form>
+        <pre id="dataContainer"></pre>
+      </div>
+      <script>
+        const fetchDataBtn = document.getElementById("fetchDataBtn");
+        const dataContainer = document.getElementById("dataContainer");
+      
+        fetchDataBtn.addEventListener("click", async () => {
+          try {
+            const response = await fetch("/getData");
+            const data = await response.json();
+            dataContainer.textContent = JSON.stringify(data, null, 2);
+          } catch (error) {
+            console.error("Fehler beim Abrufen der Daten:", error);
+            dataContainer.textContent = "Fehler beim Abrufen der Daten.";
+          }
+        });
+      </script>
+</body>
+</html>
+
