@@ -3,7 +3,10 @@ const {getRefreshtoken, updateToken} = require("../../database/db.js")
 
 const verifyToken = async (req, res, next) => {
   try {
-    const token = req.cookies.tokenset; //Das ist nur access token
+    const authorizationHeader = req.headers.authorization;
+    const token = authorizationHeader.split(" ")[1];
+    
+
     //console.log("Das ist das Tokenset aus dem Cookie", token)
     if (await isActive(token) == true) {
       console.log(await isActive(token))
