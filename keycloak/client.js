@@ -11,11 +11,13 @@ var client = null;
   client = new keycloakIssuer.Client({
     client_id: "myclient",
     client_secret: "xD0VuRQnZnGu0eDyGXEjn8yx52IbdO0A",
-    redirect_uris: ["http://localhost:3000/login/cb"],
+    redirect_uris: ["http://webapp.local:3000/login/cb"],
     response_types: ["code"],
     id_token_signing_alg_values_supported: "RS256",
   });
 })();
+
+
 
 function getCallbackParams(request) {
   return client.callbackParams(request);
