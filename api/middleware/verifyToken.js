@@ -9,7 +9,6 @@ const verifyToken = async (req, res, next) => {
 
     //console.log("Das ist das Tokenset aus dem Cookie", token)
     if (await isActive(token) == true) {
-      console.log(await isActive(token))
       console.log("Ist valide"); // Token ist gültig
       next()
     } 

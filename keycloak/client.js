@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { Issuer, TokenSet, generators } = require("openid-client");
+const { Issuer, generators } = require("openid-client");
 
 var client = null;
 
@@ -39,7 +39,6 @@ async function generateTokenset(callbackUri, params, code_verifier) {
 
 async function regenerateToken(refreshToken) {
   const newTokenset = await client.refresh(refreshToken);
-  console.log(newTokenset)
   return newTokenset
 }
 
