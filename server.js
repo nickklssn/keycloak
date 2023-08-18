@@ -24,7 +24,7 @@ app.get("/login", login ,async (req, res) => {
 });
 
 app.get("/login/cb", callback ,async (req, res) => {
-
+  res.sendFile(__dirname + "/views/dashboard.html");
 });
 
 app.get("/getData", async (req, res) => {
