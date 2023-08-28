@@ -1,13 +1,10 @@
-const { regenerateToken, isActive,  } = require("../../keycloak/client.js");
-const {getRefreshtoken, updateToken} = require("../../database/db.js")
+const { regenerateToken, isActive,  } = require("../keycloak/client.js");
+const {getRefreshtoken, updateToken} = require("../database/db.js")
 
 const verifyToken = async (req, res, next) => {
   try {
-    const authorizationHeader = req.headers.authorization;
-    const token = authorizationHeader.split(" ")[1];
-    
+    const token = req.cookies.tokenset
 
-    //console.log("Das ist das Tokenset aus dem Cookie", token)
     if (await isActive(token) == true) {
       console.log("Ist valide"); // Token ist gültig
       next()

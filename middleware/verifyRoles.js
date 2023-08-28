@@ -1,4 +1,4 @@
-const { getUserRoles } = require("../../keycloak/client");
+const { getUserRoles } = require("../keycloak/client");
 
 const verifyRole = (requiredRole) => {
   return async (req, res, next) => {
