@@ -32,6 +32,10 @@ function getAuthUrl(code_challenge) {
   });
 }
 
+function getLogoutUrl(){
+  return client.endSessionUrl()
+}
+
 async function generateTokenset(callbackUri, params, code_verifier) {
   const tokenSet = await client.callback(callbackUri, params, code_verifier);
   return tokenSet;
@@ -40,6 +44,10 @@ async function generateTokenset(callbackUri, params, code_verifier) {
 async function regenerateToken(refreshToken) {
   const newTokenset = await client.refresh(refreshToken);
   return newTokenset
+}
+
+async function revokeToken(token){
+  client.revoke(token)
 }
 
 function generateCodeVerifier() {
@@ -80,5 +88,7 @@ module.exports = {
   generateCodeVerifier,
   generateCodeChallenge,
   isActive,
-  getUserRoles
+  getUserRoles,
+  getLogoutUrl,
+  revokeToken
 };
