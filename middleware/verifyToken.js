@@ -1,4 +1,4 @@
-const { regenerateToken, isActive, checkSession,  } = require("../keycloak/client.js");
+const { regenerateToken, isActive  } = require("../keycloak/client.js");
 const {getRefreshtoken, updateToken} = require("../database/db.js")
 
 const verifyToken = async (req, res, next) => {

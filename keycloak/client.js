@@ -80,15 +80,6 @@ async function getUserRoles(accessToken){
   }
 }
 
-async function checkSession(accessToken){
-  const response = await client.introspect(accessToken)
-  if(response.active == false){
-    return false
-  }
-  else{
-    return true
-  }
-}
 
 module.exports = {
   getAuthUrl,
@@ -101,5 +92,4 @@ module.exports = {
   getUserRoles,
   getLogoutUrl,
   revokeToken,
-  checkSession
 };
