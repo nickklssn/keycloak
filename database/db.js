@@ -13,6 +13,7 @@ async function queryData(){
     const result = await client.query(`SELECT * FROM token;`)
     client.release()
     console.log("Das hier sollte das Resultat sein", result)
+    return result
 }
 
 async function createTable(){
@@ -47,6 +48,15 @@ async function deleteData(){
     await client.query(`DELETE FROM token`)
     client.release()
     console.log("Deleted data!")
+}
+
+async function deleteToken(token){
+    const client = await pool.connect()
+    await client.query(`DELETE FROM token
+    WHERE access_token = $1;`,
+            [token])
+    client.release()
+    console.log("Token deleted!")
 }
 
 async function getRefreshtoken(data) {
@@ -98,5 +108,6 @@ module.exports = {
     insertData,
     deleteData,
     getRefreshtoken,
-    updateToken
+    updateToken,
+    deleteToken
 }

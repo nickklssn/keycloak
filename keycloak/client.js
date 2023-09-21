@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { Issuer, TokenSet, generators } = require("openid-client");
+const { Issuer, generators } = require("openid-client");
 
 var client = null;
 
@@ -32,6 +32,10 @@ function getAuthUrl(code_challenge) {
   });
 }
 
+function getLogoutUrl(){
+  return client.endSessionUrl()
+}
+
 async function generateTokenset(callbackUri, params, code_verifier) {
   const tokenSet = await client.callback(callbackUri, params, code_verifier);
   return tokenSet;
@@ -39,8 +43,11 @@ async function generateTokenset(callbackUri, params, code_verifier) {
 
 async function regenerateToken(refreshToken) {
   const newTokenset = await client.refresh(refreshToken);
-  console.log(newTokenset)
   return newTokenset
+}
+
+async function revokeToken(token){
+  await client.revoke(token)
 }
 
 function generateCodeVerifier() {
@@ -66,10 +73,20 @@ async function getUserRoles(accessToken){
   const isActive = await client.introspect(accessToken)
 
   if(isActive.active == false){
-    return null
+    return []
   }
   else{
     return isActive.realm_access.roles
+  }
+}
+
+async function checkSession(accessToken){
+  const response = await client.introspect(accessToken)
+  if(response.active == false){
+    return false
+  }
+  else{
+    return true
   }
 }
 
@@ -81,5 +98,8 @@ module.exports = {
   generateCodeVerifier,
   generateCodeChallenge,
   isActive,
-  getUserRoles
+  getUserRoles,
+  getLogoutUrl,
+  revokeToken,
+  checkSession
 };

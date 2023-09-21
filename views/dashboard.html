@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>API Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+      }
+      #dashboard {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="dashboard">
+      <h1>API Dashboard</h1>
+      <form id="fetchDataForm">
+        <button type="button" id="user1">Get User 1</button>
+        <button type="button" id="user2">Get User 2</button>
+        <button type="button" id="user3">Get User 3</button>
+      </form>
+
+      <pre id="dataContainer"></pre>    
+      <div>
+      <form id="logout" action="/logout" method="get">
+        <input type="submit" value="Logout" />
+      </form>
+    </div>
+    </div>
+
+
+    <script>
+      const user1 = document.getElementById("user1");
+      const user2 = document.getElementById("user2");
+      const user3 = document.getElementById("user3");
+      const dataContainer = document.getElementById("dataContainer");
+
+      user1.addEventListener("click", async () => {
+        try {
+          const response = await fetch("/user1");
+          const data = await response.json();
+          dataContainer.textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+          dataContainer.textContent = "Error when fetching data";
+        }
+      });
+
+      user2.addEventListener("click", async () => {
+        try {
+          const response = await fetch("/user2");
+          const data = await response.json();
+          dataContainer.textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+          dataContainer.textContent = "Error when fetching data";
+        }
+      });
+
+      user3.addEventListener("click", async () => {
+        try {
+          const response = await fetch("/user3");
+          const data = await response.json();
+          dataContainer.textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+          dataContainer.textContent = "Error when fetching data";
+        }
+      });
+    </script>
+  </body>
+</html>
