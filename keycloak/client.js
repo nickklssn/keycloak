@@ -47,7 +47,7 @@ async function regenerateToken(refreshToken) {
 }
 
 async function revokeToken(token){
-  client.revoke(token)
+  await client.revoke(token)
 }
 
 function generateCodeVerifier() {
@@ -73,10 +73,20 @@ async function getUserRoles(accessToken){
   const isActive = await client.introspect(accessToken)
 
   if(isActive.active == false){
-    return null
+    return []
   }
   else{
     return isActive.realm_access.roles
+  }
+}
+
+async function checkSession(accessToken){
+  const response = await client.introspect(accessToken)
+  if(response.active == false){
+    return false
+  }
+  else{
+    return true
   }
 }
 
@@ -90,5 +100,6 @@ module.exports = {
   isActive,
   getUserRoles,
   getLogoutUrl,
-  revokeToken
+  revokeToken,
+  checkSession
 };
