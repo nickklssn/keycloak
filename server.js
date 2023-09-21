@@ -2,7 +2,6 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-const cors = require("cors")
 const login = require("./controller/loginController.js");
 const callback = require("./controller/callbackController.js");
 const verifyToken = require("./middleware/verifyToken.js");
