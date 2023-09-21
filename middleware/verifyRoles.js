@@ -4,7 +4,6 @@ const verifyRole = (requiredRole) => {
   return async (req, res, next) => {
     console.log("Das ist das Access Token", req.cookies)
     const roles = await getUserRoles(req.cookies.tokenset);
-    console.log(roles)
 
     if (roles.includes(requiredRole)) {
       next();

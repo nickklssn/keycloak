@@ -1,4 +1,4 @@
-const { regenerateToken, isActive,  } = require("../keycloak/client.js");
+const { regenerateToken, isActive, checkSession,  } = require("../keycloak/client.js");
 const {getRefreshtoken, updateToken} = require("../database/db.js")
 
 const verifyToken = async (req, res, next) => {
@@ -11,13 +11,15 @@ const verifyToken = async (req, res, next) => {
     } 
     else {
       console.log("Ist nicht valide"); //Token ist nicht gültig und wird refresht
+
       const refreshToken = await getRefreshtoken(token) //nur refresh token aus db
       const newTokenset = await regenerateToken(refreshToken); //nur access token
       const newAccessToken = newTokenset.access_token
       const newRefreshToken = newTokenset.refresh_token
       console.log(newAccessToken, newRefreshToken)
       await updateToken(token, newAccessToken, newRefreshToken)
-      res.cookie("tokenset", newAccessToken, { httpOnly: true });
+      res.cookie("tokenset", newAccessToken, {httpOnly: true, overwrite: true });
+      req.cookies.tokenset = newAccessToken;
       console.log("Updated token!")
       next();
     }
