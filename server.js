@@ -9,6 +9,7 @@ const verifyToken = require("./middleware/verifyToken.js");
 const verifyRole = require("./middleware/verifyRoles.js");
 const logout = require("./controller/logoutController.js");
 const { deleteData, queryData } = require("./database/db.js");
+const checkSession = require("./middleware/checkSession.js");
 
 const app = express();
 
@@ -17,9 +18,9 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors({
-  origin: "webapp.local:3000"
-}))
+//app.use(cors());
+//app.use(checkSession)
+
 
 
 
@@ -35,10 +36,22 @@ app.get("/login/cb", callback ,async (req, res) => {
   res.sendFile(__dirname + "/views/dashboard.html");
 });
 
-app.get("/getData", /*verifyToken, verifyRole("app-user"),*/ (req, res) => {
-  
-  res.json({text: "Hello from the other side"})
+app.get("/user1", verifyToken, async (req, res) => {
+  const data = await fetch("http://api.local:3001/user1")
+  const formattedData = await data.json();
+  res.send(formattedData)
+});
 
+app.get("/user2", verifyToken, verifyRole("app-user"), async (req, res) => {
+  const data = await fetch("http://api.local:3001/user2")
+  const formattedData = await data.json();
+  res.send(formattedData)
+});
+
+app.get("/user3", verifyToken, verifyRole("admin"), async (req, res) => {
+  const data = await fetch("http://api.local:3001/user3")
+  const formattedData = await data.json();
+  res.send(formattedData)
 });
 
 app.get("/logout", logout,(req, res) =>{
