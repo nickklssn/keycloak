@@ -12,24 +12,24 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 
-app.get("/" ,(req, res) => {
+app.get("/" ,(_req, res) => {
   res.send("Welcome to the api");
 });
 
-app.get("/user1", (req, res) => {
+app.get("/user1", (_req, res) => {
   res.json({ name: "Nick", age: 23, gender: "m" });
 });
 
-app.get("/user2", (req, res) =>{
+app.get("/user2", (_req, res) =>{
   res.json({ name: "Karsten", age: 46, gender: "m" })
 })
 
-app.get("/user3", (req, res) =>{
+app.get("/user3", (_req, res) =>{
   res.json({ name: "Alisa", age: 55, gender: "w" })
 })
 
 app.listen(PORT, () => {
-  console.log("Server listen on port 3001");
+  console.log(`API listen on port ${PORT}`);
 });
 
 

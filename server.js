@@ -62,5 +62,5 @@ app.get("/showData", async(req, res) =>{
 
 
 app.listen(PORT, () => {
-  console.log("Server listen on port 3000");
+  console.log(`Server listen on port ${PORT}`);
 });

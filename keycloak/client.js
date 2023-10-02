@@ -5,15 +5,15 @@ var client = null;
 
 (async function () {
   const keycloakIssuer = await Issuer.discover(
-    "http://localhost:8080/realms/myrealm"
+    process.env.WELLKNOWN_CONFIG
   );
 
   client = new keycloakIssuer.Client({
-    client_id: "myclient",
-    client_secret: "xD0VuRQnZnGu0eDyGXEjn8yx52IbdO0A",
-    redirect_uris: ["http://webapp.local:3000/login/cb"],
-    response_types: ["code"],
-    id_token_signing_alg_values_supported: "RS256",
+    client_id: process.env.CLIENT_ID,
+    client_secret: process.env.CLIENT_SECRET,
+    redirect_uris: [process.env.REDIRECT_URI],
+    response_types: [process.env.RESPONSE_TYPES],
+    id_token_signing_alg_values_supported: process.env.ID_TOKEN_SIGNING_ALG_VALUES_SUPPORTED,
   });
 })();
 
@@ -26,7 +26,6 @@ function getCallbackParams(request) {
 function getAuthUrl(code_challenge) {
   return client.authorizationUrl({
     scope: "openid email profile",
-    resource: "http://localhost:3001/data",
     code_challenge,
     code_challenge_method: "S256",
   });
@@ -36,8 +35,8 @@ function getLogoutUrl(){
   return client.endSessionUrl()
 }
 
-async function generateTokenset(callbackUri, params, code_verifier) {
-  const tokenSet = await client.callback(callbackUri, params, code_verifier);
+async function generateTokenset(params, code_verifier) {
+  const tokenSet = await client.callback("http://webapp.local:3000/login/cb", params, code_verifier);
   return tokenSet;
 }
 
