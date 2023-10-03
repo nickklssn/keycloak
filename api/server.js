@@ -16,6 +16,7 @@ app.get("/" ,(_req, res) => {
   res.send("Welcome to the api");
 });
 
+//define routes for user data
 app.get("/user1", (_req, res) => {
   res.json({ name: "Nick", age: 23, gender: "m" });
 });

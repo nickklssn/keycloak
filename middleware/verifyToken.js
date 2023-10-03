@@ -4,19 +4,19 @@ const {getRefreshtoken, updateToken} = require("../database/db.js")
 const verifyToken = async (req, res, next) => {
   try {
     const token = req.cookies.tokenset
-
+    	
+    //check if token is still valid
     if (await isActive(token) == true) {
-      console.log("Ist valide"); // Token ist gültig
+      console.log("Token is valid");
       next()
     } 
     else {
-      console.log("Ist nicht valide"); //Token ist nicht gültig und wird refresht
-
-      const refreshToken = await getRefreshtoken(token) //nur refresh token aus db
-      const newTokenset = await regenerateToken(refreshToken); //nur access token
+      //if token is not valid, a new token set is generated and updated in db and in browser cookie
+      console.log("Token is not valid");
+      const refreshToken = await getRefreshtoken(token)
+      const newTokenset = await regenerateToken(refreshToken);
       const newAccessToken = newTokenset.access_token
       const newRefreshToken = newTokenset.refresh_token
-      console.log(newAccessToken, newRefreshToken)
       await updateToken(token, newAccessToken, newRefreshToken)
       res.cookie("tokenset", newAccessToken, {httpOnly: true, overwrite: true });
       req.cookies.tokenset = newAccessToken;
@@ -29,5 +29,4 @@ const verifyToken = async (req, res, next) => {
   }
 };
 
-// Wenn der Refresh Token inaktiv ist, dann am besten ein redirect zur kc anmeldeseite
 module.exports = verifyToken;

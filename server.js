@@ -7,7 +7,7 @@ const callback = require("./controller/callbackController.js");
 const verifyToken = require("./middleware/verifyToken.js");
 const verifyRole = require("./middleware/verifyRoles.js");
 const logout = require("./controller/logoutController.js");
-const { deleteData, queryData } = require("./database/db.js");
+const { queryAllToken } = require("./database/db.js");
 
 const app = express();
 
@@ -22,41 +22,42 @@ app.get("/", (_req, res) => {
   res.sendFile(__dirname + "/views/login.html");
 });
 
-app.get("/login", login ,async (req, res) => {
+//auth endpoint
+app.get("/login", login ,async (_req, _res) => {
 
 });
 
-app.get("/login/cb", callback ,async (req, res) => {
+//auth callback
+app.get("/login/cb", callback ,async (_req, res) => {
   res.sendFile(__dirname + "/views/dashboard.html");
 });
 
-app.get("/user1", verifyToken, async (req, res) => {
+//define routes for data fetching from api
+app.get("/user1", verifyToken, async (_req, res) => {
   const data = await fetch("http://api.local:3001/user1")
   const formattedData = await data.json();
   res.send(formattedData)
 });
 
-app.get("/user2", verifyToken, verifyRole("app-user"), async (req, res) => {
+app.get("/user2", verifyToken, verifyRole("app-user"), async (_req, res) => {
   const data = await fetch("http://api.local:3001/user2")
   const formattedData = await data.json();
   res.send(formattedData)
 });
 
-app.get("/user3", verifyToken, verifyRole("app-admin"), async (req, res) => {
+app.get("/user3", verifyToken, verifyRole("app-admin"), async (_req, res) => {
   const data = await fetch("http://api.local:3001/user3")
   const formattedData = await data.json();
   res.send(formattedData)
 });
 
-app.get("/logout", logout,(req, res) =>{
+//end session endpoint
+app.get("/logout", logout,(_req, _res) =>{
 })
 
-app.get("/deleteData", async(req, res) =>{
-  await deleteData()
-})
-
-app.get("/showData", async(req, res) =>{
-  const results = await queryData()
+//show all tokens inside db
+app.get("/showAllToken", async(_req, res) =>{
+  const results = await queryAllToken()
   res.send(results)
 })
 

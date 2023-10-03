@@ -8,12 +8,12 @@ const pool = new Pool({
   password: "postgres",
 });
 
-async function queryData() {
+//get all token sets from db
+async function queryAllToken() {
   let client;
   try {
     client = await pool.connect();
     const result = await client.query(`SELECT * FROM token;`);
-
     return result;
   } catch (err) {
     console.error(err.message)
@@ -22,12 +22,13 @@ async function queryData() {
   }
 }
 
+//create db table for tokens
 async function createTable() {
   let client;
   try {
     client = await pool.connect();
     await client.query(`CREATE TABLE IF NOT EXISTS token (
-        "session_state" VARCHAR(100),
+        "session_state" VARCHAR(1000),
         "access_token" VARCHAR(5000),
         "refresh_token" VARCHAR(5000)
 
@@ -39,16 +40,17 @@ async function createTable() {
   }
 }
 
-async function insertData(data) {
+//insert token set in db
+async function insertToken(token) {
   let client;
   try {
     await createTable();
     client = await pool.connect();
     await client.query(`INSERT INTO token
     VALUES(
-        '${data.session_state}',
-        '${data.access_token}',
-        '${data.refresh_token}'
+        '${token.session_state}',
+        '${token.access_token}',
+        '${token.refresh_token}'
     );`);
   } catch (err) {
     console.error(err.message)
@@ -57,28 +59,15 @@ async function insertData(data) {
   }
 }
 
-async function deleteData() {
-  let client;
-  try {
-    client = await pool.connect();
-    await client.query(`DELETE FROM token`);
-
-    console.log("Deleted all token");
-  } catch (err) {
-    console.error(err.message)
-  } finally {
-    client.release();
-  }
-}
-
-async function deleteToken(token) {
+//delete token from db
+async function deleteToken(accessToken) {
   let client;
   try {
     client = await pool.connect();
     await client.query(
       `DELETE FROM token
     WHERE access_token = $1;`,
-      [token]
+      [accessToken]
     );
 
     console.log("Token deleted!");
@@ -89,7 +78,8 @@ async function deleteToken(token) {
   }
 }
 
-async function getRefreshtoken(data) {
+// get refresh token from db
+async function getRefreshtoken(accessToken) {
   let client;
 
   try {
@@ -97,11 +87,10 @@ async function getRefreshtoken(data) {
     const result = await client.query(
       `SELECT refresh_token FROM token
             WHERE access_token = $1;`,
-      [data]
+      [accessToken]
     );
     if (result.rows.length > 0) {
       const refresh_token = result.rows[0].refresh_token;
-      console.log(refresh_token);
       return refresh_token;
     } else {
       console.log("No refresh token found!");
@@ -115,6 +104,7 @@ async function getRefreshtoken(data) {
   }
 }
 
+//update invalid access token
 async function updateToken(oldAccessToken, newAccessToken, newRefreshToken) {
   let client;
   try {
@@ -135,9 +125,8 @@ async function updateToken(oldAccessToken, newAccessToken, newRefreshToken) {
 }
 
 module.exports = {
-  queryData,
-  insertData,
-  deleteData,
+  queryAllToken,
+  insertToken,
   getRefreshtoken,
   updateToken,
   deleteToken,
