@@ -60,6 +60,10 @@ Benutzername und Passwort für die Admin-Konsole sind jeweils ```admin``` .
     Valid redirect URIs: /login/cb
     Valid post logout redirect URIs: /*
    ```
+3. **Erstellung von Benutzern<br />**
+   Links im Auswahlmenü auf User und anschließend "Add user" klicken. Dem Benutzer einen "Username" und für die       
+   Unterscheidung einen "Firstname" und "Lastname" vergeben. Anschließend unter dem Reiter "Credentials" ein neues **nicht** 
+   temporäres Passwort vergeben.
    
    
 
