@@ -64,6 +64,16 @@ Benutzername und Passwort für die Admin-Konsole sind jeweils ```admin``` .
    Links im Auswahlmenü auf User und anschließend "Add user" klicken. Dem Benutzer einen "Username" und für die       
    Unterscheidung einen "Firstname" und "Lastname" vergeben. Anschließend unter dem Reiter "Credentials" ein neues **nicht** 
    temporäres Passwort vergeben.
+
+4. **Erstellung von Benutzerrollen<br />**
+   Links im Auswahlmenü auf Realm roles und anschließend "Create role" klicken. Jeweils eine Rolle für "app-user" und "app- 
+   admin" erstellen.
+   
+5. **Zuweisung der Benutzerrollen<br />**
+   Links im Auswahlmenü auf Users und einen Benutzer anklicken, dem eine Rolle zugewiesen werden soll. Anschließend unter 
+   dem Reiter "Role mapping" und danach "Assign role" dem Benutzer die gewünschte Rolle zuweisen.
+   
+   
    
    
 
