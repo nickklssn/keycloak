@@ -73,6 +73,11 @@ Benutzername und Passwort für die Admin-Konsole sind jeweils ```admin``` .
    Links im Auswahlmenü auf Users und einen Benutzer anklicken, dem eine Rolle zugewiesen werden soll. Anschließend unter 
    dem Reiter "Role mapping" und danach "Assign role" dem Benutzer die gewünschte Rolle zuweisen.
 
+6. **Lebensdauer des Access Token anpassen<br />**
+   Links im Auswahlmenü auf Realm settings und anschließend auf Tokens klicken. Unter dem Punkt "Access tokens" die Option "Access 
+   Token Lifespan" auf 1 Minute setzen. Dies erlaubt ein schnelleres Erneuern des Access Token.
+   
+
 
 
 ## Umgebungsvariablen
