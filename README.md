@@ -72,6 +72,25 @@ Benutzername und Passwort für die Admin-Konsole sind jeweils ```admin``` .
 5. **Zuweisung der Benutzerrollen<br />**
    Links im Auswahlmenü auf Users und einen Benutzer anklicken, dem eine Rolle zugewiesen werden soll. Anschließend unter 
    dem Reiter "Role mapping" und danach "Assign role" dem Benutzer die gewünschte Rolle zuweisen.
+
+
+
+## Umgebungsvariablen
+  Um Variablen, wie bspw. das Client secret, zu schützen, wurde für das Projekt eine ```.env```-Datei angelegt. Im Folgenden   ein Template für diese Datei, die im Root-Verzeichnis des Repositorys angelegt werden muss:
+
+  ```
+PORT = 3000
+WELLKNOWN_CONFIG = "http://localhost:8080/realms/YOUR-REALM/.well-known/openid-configuration"
+CLIENT_ID = "YOUR-CLIENT_ID"
+CLIENT_SECRET = "YOUR-CLIENT_SECRET"
+REDIRECT_URI = "http://webapp.local:3000/login/cb"
+RESPONSE_TYPES = 'code'
+ID_TOKEN_SIGNING_ALG_VALUES_SUPPORTED = "RS256"
+```
+Anmerkung: Die in Großbuchstaben hinterlegten Bezeichnungen durch die eigenen Bezeichnungen ersetzen.
+
+
+   
    
    
    
