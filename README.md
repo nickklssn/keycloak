@@ -56,6 +56,7 @@ Benutzername und Passwort für die Admin-Konsole sind jeweils ```admin``` .
    Links im Auswahlmenü auf Clients und anschließend "Create Client" klicken. "Client type auf "OpenID Connect" setzen und      dem Client eine "Client ID" vergeben. Die "Client authentication" auf "On" setzen. Anschließend für die "Login settings"     folgende URLs bzw. URIs setzen:
    ```shell
     Root URL: http://webapp.local:3000
+    Home URL: http://webapp.local:3000
     Valid redirect URIs: /login/cb
     Valid post logout redirect URIs: /*
    ```
