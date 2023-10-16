@@ -1,5 +1,5 @@
 # Keycloak
-Dieses Repository beinhaltet den Code für das im Rahmen des Praxisprojekts behandelte Thema "Keycloak als OpenID-Provider zum Schutz von APIs"
+Dieses Repository beinhaltet den Code für das im Rahmen des Praxisprojekts behandelte Thema "Integration von Keycloak als OpenID-Provider"
 
 
 ## Voraussetzungen
